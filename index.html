@@ -472,18 +472,7 @@
     <div class="login-title">some<em>where</em></div>
     <div class="login-sub">who's adding memories?</div>
     <div id="identity-list">
-      <div class="identity-btn" id="btn-A">
-        <div class="identity-dot" style="background:#c4471a"></div>
-        <span class="identity-name">Annabel</span>
-      </div>
-      <div class="identity-btn" id="btn-B">
-        <div class="identity-dot" style="background:#2e6e9e"></div>
-        <span class="identity-name">Eli</span>
-      </div>
-      <div class="identity-btn" id="btn-C">
-        <div class="identity-dot" style="background:#4a7c59"></div>
-        <span class="identity-name">Liya</span>
-      </div>
+      <!-- populated by buildUserPicker() -->
     </div>
   </div>
 </div>
@@ -631,10 +620,14 @@
 
 // ── 3 IDENTITIES — edit names/colors here, or rename in-app ──
 const IDENTITIES = [
-  { id: 'A', name: 'Annabel', color: '#c4471a' },
-  { id: 'B', name: 'Eli',     color: '#2e6e9e' },
-  { id: 'C', name: 'Liya',    color: '#4a7c59' },
+  { id: 'A', color: '#c4471a', nameKey: 'somewhere_name_A', defaultName: 'Annabel' },
+  { id: 'B', color: '#2e6e9e', nameKey: 'somewhere_name_B', defaultName: 'Eli'     },
+  { id: 'C', color: '#4a7c59', nameKey: 'somewhere_name_C', defaultName: 'Liya'    },
 ];
+
+function userName(identity) {
+  return localStorage.getItem(identity.nameKey) || identity.defaultName;
+}
 // ══════════════════════════════════════════════════════
 
 // ── STATE ──
@@ -1449,7 +1442,7 @@ function buildUserPicker() {
 }
 
 function selectUser(identity) {
-  currentUser = { ...identity };
+  currentUser = { ...identity, name: userName(identity) };
   document.getElementById('login-overlay').style.display = 'none';
   updateIdentityBar();
   loadFromGitHub().catch(e => { console.warn('load error', e); setStatus(''); });
@@ -1472,9 +1465,7 @@ document.getElementById('refresh-btn').addEventListener('click', async () => {
 });
 
 // ── BOOT ──
-document.getElementById('btn-A').addEventListener('click', () => selectUser(IDENTITIES[0]));
-document.getElementById('btn-B').addEventListener('click', () => selectUser(IDENTITIES[1]));
-document.getElementById('btn-C').addEventListener('click', () => selectUser(IDENTITIES[2]));
+buildUserPicker();
 
 
 </script>
