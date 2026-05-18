@@ -365,6 +365,7 @@
   .leaflet-tile-pane { filter: grayscale(0.3) sepia(0.1) brightness(1.02); transition: opacity 0.7s; }
   #map-wrap.map-hidden .leaflet-tile-pane { opacity: 0; }
   #map-wrap.map-hidden .leaflet-marker-pane { opacity: 0; transition: opacity 0.4s; }
+  #map-wrap.map-hidden .leaflet-shadow-pane { opacity: 0; }
   #map-wrap.map-hidden #map { background: var(--cream); }
   #map-wrap.map-hidden #overlay-canvas { background: var(--cream); }
 
@@ -469,6 +470,18 @@
         </div>
 
         <div class="field">
+          <label>How did it feel here?</label>
+          <div class="color-row" id="emotion-picker">
+            <div class="swatch selected" data-color="#2e6e9e" data-emotion="calm" style="background:#2e6e9e;" title="Calm"></div>
+            <div class="swatch" data-color="#4a7c59" data-emotion="alive" style="background:#4a7c59;" title="Alive"></div>
+            <div class="swatch" data-color="#c4471a" data-emotion="intense" style="background:#c4471a;" title="Intense"></div>
+            <div class="swatch" data-color="#c9861a" data-emotion="warm" style="background:#c9861a;" title="Warm"></div>
+            <div class="swatch" data-color="#7b5ea7" data-emotion="wistful" style="background:#7b5ea7;" title="Wistful"></div>
+            <div class="swatch" data-color="#c44177" data-emotion="tender" style="background:#c44177;" title="Tender"></div>
+          </div>
+        </div>
+
+        <div class="field">
           <label>Location</label>
           <div class="loc-row">
             <div class="field">
@@ -482,18 +495,6 @@
         <div class="field">
           <label>Date</label>
           <input type="date" id="mem-date">
-        </div>
-
-        <div class="field">
-          <label>Feeling / Emotion</label>
-          <div class="color-row" id="emotion-picker">
-            <div class="swatch selected" data-color="#2e6e9e" title="calm" style="background:#2e6e9e;"></div>
-            <div class="swatch" data-color="#4a7c59" title="alive" style="background:#4a7c59;"></div>
-            <div class="swatch" data-color="#c4471a" title="intense" style="background:#c4471a;"></div>
-            <div class="swatch" data-color="#c9861a" title="warm" style="background:#c9861a;"></div>
-            <div class="swatch" data-color="#7b5ea7" title="wistful" style="background:#7b5ea7;"></div>
-            <div class="swatch" data-color="#c44177" title="tender" style="background:#c44177;"></div>
-          </div>
         </div>
 
         <div class="field">
@@ -595,7 +596,8 @@ let memories = [];
 let markers = [];
 let pickingMode = false;
 let pickedLat = null, pickedLng = null;
-let selectedColor = '#2e6e9e'; // Default to first swatch (calm)
+let selectedColor = '#2e6e9e';
+let selectedEmotion = 'calm';
 let selectedFriends = [];
 let selectedType = 'text';
 let photoData = null;
@@ -603,6 +605,7 @@ let audioData = null;
 let overlayVisible = false;
 let hotspots = [];
 let ghFileSha = null;
+let currentUser = null;
 
 // ── MAP INIT ──
 const map = L.map('map', { zoomControl: false }).setView([47.5480, -121.9836], 10);
@@ -614,7 +617,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // ── WATER POLYGON MASK via Overpass API ──
-let waterPolygons = []; 
+let waterPolygons = []; // array of arrays of {lat,lng} rings
 let waterCacheKey = '';
 
 async function fetchWaterPolygons() {
@@ -625,7 +628,7 @@ async function fetchWaterPolygons() {
   const n = (b.getNorth() + pad).toFixed(4);
   const e = (b.getEast()  + pad).toFixed(4);
   const key = `${s},${w},${n},${e}`;
-  if (key === waterCacheKey) return; 
+  if (key === waterCacheKey) return; // same view, skip refetch
   waterCacheKey = key;
 
   const query = `
@@ -661,10 +664,11 @@ out geom;
       }
     }
   } catch(e) {
-    waterPolygons = []; 
+    waterPolygons = []; // fail gracefully — no mask, dots everywhere
   }
 }
 
+// Build a canvas Path2D for all water polys at current map projection
 function buildWaterPath() {
   const path = new Path2D();
   for (const ring of waterPolygons) {
@@ -680,6 +684,7 @@ function buildWaterPath() {
   return path;
 }
 
+// Point-in-water test using a tiny offscreen canvas hit test
 let waterTestCanvas = document.createElement('canvas');
 waterTestCanvas.width = 1; waterTestCanvas.height = 1;
 let waterTestCtx = waterTestCanvas.getContext('2d', { willReadFrequently: true });
@@ -727,7 +732,7 @@ function isWater(px, py) {
   const x = Math.round(px), y = Math.round(py);
   if (x < 0 || y < 0 || x >= fullWaterW || y >= fullWaterH) return false;
   const i = (y * fullWaterW + x) * 4;
-  return bakedPixels[i] > 128; 
+  return bakedPixels[i] > 128; // black = water
 }
 
 // ── TABS ──
@@ -769,12 +774,12 @@ map.on('click', e => {
   pc.style.display = 'block';
 });
 
-// ── ADDRESS GEOCODE ──
+// ── ADDRESS GEOCODE (debounced) ──
 let geoTimeout;
 document.getElementById('mem-address').addEventListener('input', e => {
   clearTimeout(geoTimeout);
   const val = e.target.value.trim();
-  if (!val || val.includes(',')) return; 
+  if (!val || val.includes(',')) return; // skip if looks like coords
   geoTimeout = setTimeout(async () => {
     try {
       const r = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=1`);
@@ -791,12 +796,13 @@ document.getElementById('mem-address').addEventListener('input', e => {
   }, 800);
 });
 
-// ── EMOTION PICKER INTERACTIVITY ──
+// ── EMOTION PICKER EVENT LISTENERS ──
 document.querySelectorAll('#emotion-picker .swatch').forEach(swatch => {
   swatch.addEventListener('click', () => {
     document.querySelectorAll('#emotion-picker .swatch').forEach(s => s.classList.remove('selected'));
     swatch.classList.add('selected');
     selectedColor = swatch.dataset.color;
+    selectedEmotion = swatch.dataset.emotion;
   });
 });
 
@@ -912,7 +918,8 @@ document.getElementById('submit-btn').addEventListener('click', async () => {
     lat: pickedLat,
     lng: pickedLng,
     date: document.getElementById('mem-date').value,
-    color: selectedColor, // Uses picker color instead of author default color
+    color: selectedColor,
+    emotion: selectedEmotion,
     friends: [...selectedFriends],
     type: selectedType,
     photo: photoData,
@@ -939,21 +946,20 @@ function resetForm() {
   document.querySelectorAll('.friend-tag').forEach(ft => ft.classList.remove('selected'));
   selectedFriends = [];
   document.getElementById('mem-date').value = new Date().toISOString().split('T')[0];
-  
-  // Reset emotion picker back to default (calm)
+
+  // Reset emotion picker selection to default (Calm)
   document.querySelectorAll('#emotion-picker .swatch').forEach(s => s.classList.remove('selected'));
-  const defaultSwatch = document.querySelector('#emotion-picker .swatch');
-  if (defaultSwatch) {
-    defaultSwatch.classList.add('selected');
-    selectedColor = defaultSwatch.dataset.color;
-  }
+  const defaultSwatch = document.querySelector('#emotion-picker .swatch[data-emotion="calm"]');
+  if (defaultSwatch) defaultSwatch.classList.add('selected');
+  selectedColor = '#2e6e9e';
+  selectedEmotion = 'calm';
 }
 
 // ── MARKERS ──
 function addMarker(mem) {
   const el = document.createElement('div');
   el.className = 'mem-marker';
-  el.style.background = mem.color;
+  el.style.background = mem.color || '#c4471a';
 
   const icon = L.divIcon({ html: el.outerHTML, className: '', iconSize: [14,14], iconAnchor: [7,7] });
   const marker = L.marker([mem.lat, mem.lng], { icon })
@@ -992,12 +998,15 @@ function renderMemoriesList() {
 
     card.innerHTML = `
       <div class="mc-header">
-        <div class="mc-dot" style="background:${mem.color}"></div>
+        <div class="mc-dot" style="background:${mem.color || '#c4471a'}"></div>
         <span class="mc-title">${mem.title}</span>
         <span class="mc-date">${mem.date || ''}</span>
       </div>
       ${mem.photo ? `<img src="${mem.photo}" style="width:100%;height:60px;object-fit:cover;border-radius:2px;margin-bottom:6px;">` : ''}
-      ${mem.authorName ? `<div style="font-size:10px;color:var(--ink-muted);margin-bottom:4px;">by ${mem.authorName}</div>` : ''}
+      <div style="font-size:10px;color:var(--ink-muted);margin-bottom:4px; display: flex; gap: 8px;">
+        ${mem.authorName ? `<span>by ${mem.authorName}</span>` : ''}
+        ${mem.emotion ? `<span>feeling: <strong style="color:${mem.color}">${mem.emotion}</strong></span>` : ''}
+      </div>
       ${mem.text ? `<div class="mc-text">${mem.text}</div>` : ''}
       <div class="mc-loc">${mem.lat.toFixed(4)}, ${mem.lng.toFixed(4)}</div>
       ${friendsHtml ? `<div class="mc-friends">${friendsHtml}</div>` : ''}
@@ -1009,11 +1018,14 @@ function renderMemoriesList() {
   });
 }
 
-// ── GITHUB CONFIG ──
+// ══════════════════════════════════════════════════════
+// ── GITHUB CONFIG — edit these to match your repo ──
+// ══════════════════════════════════════════════════════
 const GH_OWNER  = 'elismth';
 const GH_REPO   = 'Info442';
 const GH_FILE   = 'memories.json';
 const GH_BRANCH = 'main';
+// ══════════════════════════════════════════════════════
 
 // ── GITHUB DATA LAYER ──
 function getToken() {
@@ -1061,7 +1073,7 @@ async function ghPut(payload) {
   await ghGetWithSha();
 
   const body = {
-    message: `memory added by ${typeof currentUser !== 'undefined' && currentUser ? currentUser.name : 'unknown'}`,
+    message: `memory added by ${currentUser ? currentUser.name : 'unknown'}`,
     content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2)))),
     branch: GH_BRANCH,
   };
@@ -1105,6 +1117,13 @@ async function loadFromGitHub() {
   renderMemoriesList();
   setStatus(memories.length + ' memor' + (memories.length === 1 ? 'y' : 'ies') + ' loaded');
   setTimeout(() => setStatus(''), 2000);
+}
+
+async function saveMemories() {
+  setStatus('saving…');
+  const ok = await ghPut({ memories });
+  setStatus(ok ? 'saved ✓' : 'save failed — check token/repo');
+  setTimeout(() => setStatus(''), 3000);
 }
 
 function setStatus(msg) {
@@ -1180,7 +1199,7 @@ async function renderOverlay() {
 
   memories.forEach(mem => {
     const pos = latLngToCanvas(mem.lat, mem.lng);
-    const rgb = hexToRgb(mem.color || '#2e6e9e');
+    const rgb = hexToRgb(mem.color || '#c4471a');
     const r = spread;
 
     if (halftone) {
@@ -1190,7 +1209,7 @@ async function renderOverlay() {
           const dist = Math.sqrt(dx*dx + dy*dy);
           if (dist > r) continue;
           const cx = pos.x + dx, cy = pos.y + dy;
-          if (isWater(cx, cy)) continue; 
+          if (isWater(cx, cy)) continue;
           const falloff = 1 - dist / r;
           const radius = dotSize * falloff * 1.4;
           const alpha = opacity * falloff * 0.9;
@@ -1244,23 +1263,16 @@ async function renderOverlay() {
   setTimeout(() => { canvas.style.opacity = 1; }, 50);
 }
 
-// ── SAVE TO GITHUB ──
-async function saveMemories() {
-  setStatus('saving…');
-  await ghGetWithSha();
-  const ok = await ghPut({ memories });
-  setStatus(ok ? 'saved ✓' : 'save failed — check token/repo');
-  setTimeout(() => setStatus(''), 3000);
-}
-
 // ── OVERLAY CONTROLS — AUTO REDRAW ──
 ['spread','opacity','dots'].forEach(id => {
   const inp = document.getElementById('ctrl-' + id);
   const val = document.getElementById('val-' + id);
-  inp.addEventListener('input', () => {
-    val.textContent = inp.value;
-    if (overlayVisible) renderOverlay();
-  });
+  if (inp && val) {
+    inp.addEventListener('input', () => {
+      val.textContent = inp.value;
+      if (overlayVisible) renderOverlay();
+    });
+  }
 });
 
 document.getElementById('ctrl-halftone').addEventListener('change', () => {
@@ -1294,11 +1306,12 @@ canvas.addEventListener('mousemove', e => {
     const entriesHtml = found.memories.map(m => `
       <div class="ht-entry">
         <div style="display:flex;align-items:center;gap:6px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:${m.color || '#2e6e9e'};flex-shrink:0;"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:${m.color || '#c4471a'};flex-shrink:0;"></div>
           <div class="ht-entry-name">${m.title}</div>
         </div>
-        ${m.text ? `<div class="ht-entry-text">${m.text.length > 80 ? m.text.slice(0,80)+'…' : m.text}</div>` : ''}
-        ${m.friends.length ? `<div class="ht-entry-friend">with: ${m.friends.join(', ')}</div>` : ''}
+        ${m.emotion ? `<div style="font-size:9px;color:var(--ink-muted);margin:2px 0 0 14px;">feeling: <strong>${m.emotion}</strong></div>` : ''}
+        ${m.text ? `<div class="ht-entry-text" style="margin-left:14px;">${m.text.length > 80 ? m.text.slice(0,80)+'…' : m.text}</div>` : ''}
+        ${m.friends.length ? `<div class="ht-entry-friend" style="margin-left:14px;">with: ${m.friends.join(', ')}</div>` : ''}
       </div>
     `).join('');
 
@@ -1328,6 +1341,7 @@ canvas.addEventListener('mouseleave', () => {
 map.on('zoomend', () => { waterCacheKey = ''; if (overlayVisible) renderOverlay(); });
 map.on('moveend', () => { if (overlayVisible) renderOverlay(); });
 
+// ── HIDE OVERLAY WHEN NOT ON OVERLAY TAB ──
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     if (tab.dataset.tab !== 'overlay' && overlayVisible) {
@@ -1341,14 +1355,7 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// ── USER PICKER ──
-let currentUser = null;
-function setCurrentUser(identity) {
-  currentUser = { ...identity };
-  const loginOverlay = document.getElementById('login-overlay');
-  if (loginOverlay) loginOverlay.style.display = 'none';
-}
-
+// Setup Refresh Button Action
 document.getElementById('refresh-btn').addEventListener('click', () => {
   loadFromGitHub().catch(e => setStatus(''));
 });
