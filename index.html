@@ -635,9 +635,9 @@
 
 // ── 3 IDENTITIES — edit names/colors here, or rename in-app ──
 const IDENTITIES = [
-  { id: 'A', color: '#c4471a', nameKey: 'somewhere_name_A', defaultName: 'person A' },
-  { id: 'B', color: '#2e6e9e', nameKey: 'somewhere_name_B', defaultName: 'person B' },
-  { id: 'C', color: '#4a7c59', nameKey: 'somewhere_name_C', defaultName: 'person C' },
+  { id: 'A', color: '#c4471a', nameKey: 'somewhere_name_A', defaultName: 'Annabel' },
+  { id: 'B', color: '#2e6e9e', nameKey: 'somewhere_name_B', defaultName: 'Eli' },
+  { id: 'C', color: '#4a7c59', nameKey: 'somewhere_name_C', defaultName: 'Liya' },
 ];
 // ══════════════════════════════════════════════════════
 
@@ -1476,14 +1476,8 @@ document.getElementById('refresh-btn').addEventListener('click', async () => {
 });
 
 // ── BOOT ──
-// Remember last user across refreshes
-const lastUserId = localStorage.getItem('somewhere_last_user');
-const lastIdentity = IDENTITIES.find(i => i.id === lastUserId);
-if (lastIdentity) {
-  selectUser(lastIdentity);
-} else {
-  buildUserPicker();
-}
+// Always show the picker — one tap, no silent failures
+buildUserPicker();
 
 
 </script>
