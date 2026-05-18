@@ -47,6 +47,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779138350481,
+      "author": "B",
+      "authorName": "Eli",
+      "title": "Drunk run",
+      "text": "ran up these stairs drunk after a party",
+      "lat": 47.666438646300264,
+      "lng": -122.30414986610414,
+      "date": "",
+      "color": "#c4471a",
+      "emotion": "intense",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
