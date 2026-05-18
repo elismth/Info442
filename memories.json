@@ -63,6 +63,38 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779138402564,
+      "author": "B",
+      "authorName": "Eli",
+      "title": "Engagement",
+      "text": "I got engaged here! lol",
+      "lat": 47.66435049633506,
+      "lng": -122.31237888336183,
+      "date": "",
+      "color": "#c44177",
+      "emotion": "tender",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
+    },
+    {
+      "id": 1779138471614,
+      "author": "B",
+      "authorName": "Eli",
+      "title": "Almond croissant",
+      "text": "Used to get breakfast here before class, I loved the almond croissant :3",
+      "lat": 47.658533582839176,
+      "lng": -122.31305211782457,
+      "date": "",
+      "color": "#2e6e9e",
+      "emotion": "calm",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
