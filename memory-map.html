@@ -633,14 +633,6 @@
 
 <script>
 
-// ══════════════════════════════════════════════════════
-// ── GITHUB CONFIG — edit these to match your repo ──
-// ══════════════════════════════════════════════════════
-const GH_OWNER = 'YOUR_GITHUB_USERNAME';
-const GH_REPO  = 'somewhere-memories';
-const GH_FILE  = 'memories.json';
-const GH_BRANCH = 'main';
-
 // ── 3 IDENTITIES — edit names/colors here, or rename in-app ──
 const IDENTITIES = [
   { id: 'A', color: '#c4471a', nameKey: 'somewhere_name_A', defaultName: 'person A' },
@@ -1057,16 +1049,24 @@ function renderMemoriesList() {
   });
 }
 
+// ══════════════════════════════════════════════════════
+// ── GITHUB CONFIG — edit these to match your repo ──
+// ══════════════════════════════════════════════════════
+const GH_OWNER  = 'elismth';
+const GH_REPO   = 'Info442';
+const GH_FILE   = 'memories.json';
+const GH_BRANCH = 'main';
+// ══════════════════════════════════════════════════════
+
 // ── GITHUB DATA LAYER ──
-// Reads via raw.githubusercontent.com (no auth needed for public repos).
-// Writes via GitHub Contents API using a single shared token stored in localStorage.
+// Reads via raw.githubusercontent.com (no auth, works on public repos).
+// Writes via GitHub Contents API — prompts for a shared token once per device.
 
 function getToken() {
   return localStorage.getItem('somewhere_gh_token') || '';
 }
 
-async function ghGet() {
-  // Always fetch fresh from raw to avoid caching
+async function ghGetRaw() {
   const url = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
   try {
     const r = await fetch(url);
@@ -1076,51 +1076,67 @@ async function ghGet() {
 }
 
 async function ghGetWithSha() {
-  // Need sha for PUT — use API endpoint
   const token = getToken();
   const headers = { Accept: 'application/vnd.github.v3+json' };
   if (token) headers.Authorization = `token ${token}`;
   try {
-    const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`, { headers });
+    const r = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,
+      { headers }
+    );
     if (!r.ok) return null;
     const data = await r.json();
     ghFileSha = data.sha;
-    return JSON.parse(atob(data.content.replace(/\n/g, '')));
+    return JSON.parse(atob(data.content.replace(/
+/g, '')));
   } catch(e) { return null; }
 }
 
 async function ghPut(payload) {
-  const token = getToken();
+  let token = getToken();
   if (!token) {
-    // Prompt once for a shared token
-    const t = prompt('Enter a GitHub token with contents:write access to this repo:\n(stored locally in your browser, never in the repo)');
-    if (!t) return false;
-    localStorage.setItem('somewhere_gh_token', t.trim());
+    token = prompt(
+      'Enter your shared GitHub token to save memories.
+' +
+      '(needs contents: write on ' + GH_OWNER + '/' + GH_REPO + ')
+
+' +
+      'This is stored only in your browser — never in the repo.'
+    );
+    if (!token) { setStatus('save cancelled — no token'); return false; }
+    localStorage.setItem('somewhere_gh_token', token.trim());
+    token = token.trim();
   }
-  // Fetch latest sha before writing
+
+  // Get latest sha to avoid conflicts
   await ghGetWithSha();
+
   const body = {
     message: `memory added by ${currentUser ? currentUser.name : 'unknown'}`,
     content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2)))),
     branch: GH_BRANCH,
   };
   if (ghFileSha) body.sha = ghFileSha;
+
   try {
-    const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `token ${localStorage.getItem('somewhere_gh_token')}`,
-        Accept: 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
+    const r = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }
+    );
     if (!r.ok) {
       const err = await r.json();
       console.error('GitHub write error', err);
       if (r.status === 401 || r.status === 403) {
         localStorage.removeItem('somewhere_gh_token');
-        setStatus('token invalid — will ask again next save');
+        setStatus('token invalid — will ask again on next save');
       }
       return false;
     }
@@ -1130,20 +1146,23 @@ async function ghPut(payload) {
   } catch(e) { return false; }
 }
 
-// ── INIT: load from GitHub ──
 async function loadFromGitHub() {
   setStatus('loading…');
-  const data = await ghGet();
+  const data = await ghGetRaw();
   memories = [];
   markers.forEach(m => map.removeLayer(m.marker));
   markers = [];
-  (data.memories || []).forEach(mem => {
-    memories.push(mem);
-    addMarker(mem);
-  });
+  (data.memories || []).forEach(mem => { memories.push(mem); addMarker(mem); });
   renderMemoriesList();
-  setStatus(`${memories.length} memor${memories.length === 1 ? 'y' : 'ies'} loaded`);
+  setStatus(memories.length + ' memor' + (memories.length === 1 ? 'y' : 'ies') + ' loaded');
   setTimeout(() => setStatus(''), 2000);
+}
+
+async function saveMemories() {
+  setStatus('saving…');
+  const ok = await ghPut({ memories });
+  setStatus(ok ? 'saved ✓' : 'save failed — check token');
+  setTimeout(() => setStatus(''), 3000);
 }
 
 function setStatus(msg) {
