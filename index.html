@@ -1143,15 +1143,20 @@ async function ghPut(payload) {
 }
 
 async function loadFromGitHub() {
-  setStatus('loading…');
-  const data = await ghGetRaw();
-  memories = [];
-  markers.forEach(m => map.removeLayer(m.marker));
-  markers = [];
-  (data.memories || []).forEach(mem => { memories.push(mem); addMarker(mem); });
-  renderMemoriesList();
-  setStatus(memories.length + ' memor' + (memories.length === 1 ? 'y' : 'ies') + ' loaded');
-  setTimeout(() => setStatus(''), 2000);
+  try {
+    setStatus('loading…');
+    const data = await ghGetRaw();
+    memories = [];
+    markers.forEach(m => map.removeLayer(m.marker));
+    markers = [];
+    (data.memories || []).forEach(mem => { memories.push(mem); addMarker(mem); });
+    renderMemoriesList();
+    setStatus(memories.length + ' memor' + (memories.length === 1 ? 'y' : 'ies') + ' loaded');
+    setTimeout(() => setStatus(''), 2000);
+  } catch(e) {
+    console.warn('loadFromGitHub failed:', e);
+    setStatus('');
+  }
 }
 
 async function saveMemories() {
@@ -1443,11 +1448,11 @@ function buildUserPicker() {
   });
 }
 
-async function selectUser(identity) {
+function selectUser(identity) {
   currentUser = { ...identity };
   document.getElementById('login-overlay').style.display = 'none';
   updateIdentityBar();
-  await loadFromGitHub();
+  loadFromGitHub().catch(e => { console.warn('load error', e); setStatus(''); });
 }
 
 function updateIdentityBar() {
