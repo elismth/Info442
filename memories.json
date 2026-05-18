@@ -95,6 +95,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779138798085,
+      "author": "B",
+      "authorName": "Eli",
+      "title": "current apartment",
+      "text": "I have laughed cried partied done it all here truly",
+      "lat": 47.66336780862317,
+      "lng": -122.31394529342653,
+      "date": "",
+      "color": "#c4471a",
+      "emotion": "intense",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
