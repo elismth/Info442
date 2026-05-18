@@ -1,3 +1,36 @@
 {
-  "memories": []
+  "memories": [
+    {
+      "id": 1779138129269,
+      "author": "B",
+      "authorName": "Eli",
+      "title": "First apartment",
+      "text": "My first apartment in seattle",
+      "lat": 47.65849022452876,
+      "lng": -122.31409013271333,
+      "date": "",
+      "color": "#7b5ea7",
+      "emotion": "wistful",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
+    },
+    {
+      "id": 1779138170039,
+      "author": "B",
+      "authorName": "Eli",
+      "title": "first aparment",
+      "text": "First apartment in seattle",
+      "lat": 47.65846493216439,
+      "lng": -122.31412768363954,
+      "date": "",
+      "color": "#7b5ea7",
+      "emotion": "wistful",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
+    }
+  ]
 }
