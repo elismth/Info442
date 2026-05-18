@@ -195,19 +195,6 @@
   }
   .media-upload:hover { border-color: var(--rust); color: var(--rust); }
 
-  /* color swatch */
-  .color-row { display: flex; gap: 8px; }
-  .swatch {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: transform 0.1s;
-    flex-shrink: 0;
-  }
-  .swatch.selected { border-color: var(--ink); transform: scale(1.15); }
-  .swatch:hover { transform: scale(1.1); }
-
   /* friend tag */
   .tag-row { display: flex; flex-wrap: wrap; gap: 5px; }
   .friend-tag {
@@ -269,6 +256,15 @@
     color: var(--ink-muted);
     border: 1px solid var(--border);
   }
+  .mc-emotion-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: white;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
 
   /* ── OVERLAY PANEL ── */
   #overlay-controls {
@@ -281,22 +277,9 @@
   .ctrl-row input[type=range] { flex: 1; }
   .ctrl-val { font-size: 11px; min-width: 32px; text-align: right; color: var(--ink-muted); }
 
-  #regen-btn {
-    width: 100%;
-    padding: 9px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: none;
-    border: 1px solid var(--ink);
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .legend-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+  .legend-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--ink-muted); }
-  .legend-swatch { width: 16px; height: 10px; border-radius: 2px; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 50%; }
 
   /* ── MAP CANVAS ── */
   #overlay-canvas {
@@ -335,7 +318,7 @@
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 12px;
-    max-width: 260px;
+    max-width: 280px;
     z-index: 900;
     display: none;
     box-shadow: 0 4px 24px rgba(0,0,0,0.12);
@@ -343,12 +326,12 @@
     font-family: 'Space Mono', monospace;
   }
   #hotspot-tooltip.visible { display: block; }
-  .ht-title { font-size: 11px; font-weight: 700; margin-bottom: 6px; color: var(--rust); letter-spacing: 0.04em; text-transform: uppercase; }
-  .ht-entry { padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .ht-title { font-size: 11px; font-weight: 700; margin-bottom: 6px; color: var(--ink); letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+  .ht-entry { padding: 6px 0; border-bottom: 1px dashed var(--border); }
   .ht-entry:last-child { border-bottom: none; }
   .ht-entry-name { font-size: 11px; font-weight: 700; color: var(--ink); }
   .ht-entry-text { font-size: 10px; color: var(--ink-soft); line-height: 1.5; margin-top: 2px; }
-  .ht-entry-friend { font-size: 9px; color: var(--ink-muted); margin-top: 2px; }
+  .ht-entry-meta { font-size: 9px; color: var(--ink-muted); margin-top: 2px; }
 
   /* ── LEAFLET CUSTOM MARKER ── */
   .mem-marker {
@@ -362,7 +345,7 @@
   .mem-marker:hover { transform: scale(1.4); }
 
   /* ── MAP TILE ── */
-  .leaflet-tile-pane { filter: grayscale(0.3) sepia(0.1) brightness(1.02); transition: opacity 0.7s; }
+  .leaflet-tile-pane { filter: grayscale(0.5) sepia(0.2) brightness(1.0); transition: opacity 0.7s; }
   #map-wrap.map-hidden .leaflet-tile-pane { opacity: 0; }
   #map-wrap.map-hidden .leaflet-marker-pane { opacity: 0; transition: opacity 0.4s; }
   #map-wrap.map-hidden .leaflet-shadow-pane { opacity: 0; }
@@ -406,16 +389,7 @@
     border-bottom: 1px solid var(--border);
     background: var(--panel);
   }
-  .id-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .id-name { font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); flex: 1; }
-  #sync-status { font-size: 10px; color: var(--ink-muted); }
-  #switch-user-btn {
-    font-size: 10px; font-family: 'Space Mono', monospace;
-    background: none; border: none; cursor: pointer;
-    color: var(--ink-muted); padding: 2px 6px;
-    border-radius: 3px; transition: all 0.1s;
-  }
-  #switch-user-btn:hover { color: var(--rust); }
+  #sync-status { font-size: 10px; color: var(--ink-muted); flex-grow: 1; text-align: left; }
   #refresh-btn {
     font-size: 10px; font-family: 'Space Mono', monospace;
     background: none; border: 1px solid var(--border);
@@ -429,15 +403,12 @@
 </head>
 <body>
 
-
-
 <div id="app">
 
-  <!-- SIDEBAR -->
   <div id="sidebar">
     <div id="sidebar-header">
       <div class="wordmark">some<em>where</em></div>
-      <div class="tagline">a geography of memory</div>
+      <div class="tagline">a geography of emotion</div>
     </div>
 
     <div id="identity-bar">
@@ -450,7 +421,6 @@
       <button class="tab" data-tab="overlay">Bloom Map</button>
     </div>
 
-    <!-- ADD MEMORY PANEL -->
     <div class="panel active" id="panel-add">
       <div class="scroll-area">
         <div class="field">
@@ -460,6 +430,18 @@
             <option value="A">Annabel</option>
             <option value="B">Eli</option>
             <option value="C">Liya</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Dominant Emotion</label>
+          <select id="mem-emotion">
+            <option value="">— select emotional tone —</option>
+            <option value="love">❤️ Love & Belonging</option>
+            <option value="happiness">💛 Joy & Celebration</option>
+            <option value="nature">💚 Peace & Nature</option>
+            <option value="melancholy">💙 Melancholy & Longing</option>
+            <option value="nostalgia">💜 Nostalgia & Wonder</option>
           </select>
         </div>
 
@@ -496,14 +478,15 @@
             <button class="type-btn" data-type="photo">Photo</button>
             <button class="type-btn" data-type="audio">Audio</button>
           </div>
-          <div class="media-area" id="media-area">
-            <!-- populated dynamically -->
-          </div>
+          <div class="media-area" id="media-area"></div>
         </div>
 
         <div class="field">
           <label>Tag others</label>
           <div class="tag-row" id="friend-tags">
+            <button class="friend-tag" data-friend="Annabel">Annabel</button>
+            <button class="friend-tag" data-friend="Eli">Eli</button>
+            <button class="friend-tag" data-friend="Liya">Liya</button>
             <button class="friend-tag" data-friend="+ add">+ add</button>
           </div>
         </div>
@@ -512,14 +495,12 @@
       </div>
     </div>
 
-    <!-- MEMORIES PANEL -->
     <div class="panel" id="panel-memories">
       <div class="scroll-area" id="memories-list">
         <div class="empty"><span>◦</span>No memories yet.<br>Add one to begin.</div>
       </div>
     </div>
 
-    <!-- BLOOM OVERLAY PANEL -->
     <div class="panel" id="panel-overlay">
       <div id="overlay-controls">
         <p class="section-head">Bloom map controls</p>
@@ -547,28 +528,18 @@
           <input type="checkbox" id="ctrl-hidemap"> Hide base map
         </label>
 
-        <div class="legend-row">
-          <div class="legend-item"><div class="legend-swatch" style="background:#2e6e9e; opacity:0.7;"></div>calm</div>
-          <div class="legend-item"><div class="legend-swatch" style="background:#4a7c59; opacity:0.7;"></div>alive</div>
-          <div class="legend-item"><div class="legend-swatch" style="background:#c4471a; opacity:0.7;"></div>intense</div>
-          <div class="legend-item"><div class="legend-swatch" style="background:#c9861a; opacity:0.7;"></div>warm</div>
-          <div class="legend-item"><div class="legend-swatch" style="background:#7b5ea7; opacity:0.7;"></div>wistful</div>
-          <div class="legend-item"><div class="legend-swatch" style="background:#c44177; opacity:0.7;"></div>tender</div>
-        </div>
+        <p class="section-head" style="margin-top:15px; border:none; margin-bottom:5px;">Emotional Palette</p>
+        <div class="legend-row" id="emotion-legend">
+          </div>
       </div>
       <div class="scroll-area">
         <p style="font-size:11px; color:var(--ink-muted); line-height:1.7;">
-          The bloom map renders an abstract gradient field across all your memories. Points close in geography that share friends or feelings bloom together into warm overlapping fields — hover over hot zones to see the memories beneath.
-        </p>
-        <br>
-        <p style="font-size:10px; color:var(--ink-muted); line-height:1.6; font-style:italic;">
-          "I see flowers blooming in your body — can you pick some and plant it on me?"
+          The bloom map renders an abstract gradient field driven by shared emotional energy. Geographic regions where similar feelings are cultivated bleed together into deep overlapping color nodes — hover over hot zones to query the memories beneath.
         </p>
       </div>
     </div>
   </div>
 
-  <!-- MAP AREA -->
   <div id="map-wrap">
     <div id="map"></div>
     <canvas id="overlay-canvas"></canvas>
@@ -579,20 +550,26 @@
 
 <script>
 
-// ── 3 IDENTITIES — edit names/colors here, or rename in-app ──
-const IDENTITIES = [
-  { id: 'A', name: 'Annabel', color: '#c4471a' },
-  { id: 'B', name: 'Eli',     color: '#2e6e9e' },
-  { id: 'C', name: 'Liya',    color: '#4a7c59' },
-];
-// ══════════════════════════════════════════════════════
+// ── EMOTIONAL REGIME DEFINITIONS ──
+const EMOTIONS = {
+  love: { name: 'Love & Belonging', color: '#e63946', icon: '❤️' },
+  happiness: { name: 'Joy & Celebration', color: '#ffb703', icon: '💛' },
+  nature: { name: 'Peace & Nature', color: '#4a7c59', icon: '💚' },
+  melancholy: { name: 'Melancholy & Longing', color: '#2e6e9e', icon: '💙' },
+  nostalgia: { name: 'Nostalgia & Wonder', color: '#8338ec', icon: '💜' }
+};
 
-// ── STATE ──
+const IDENTITIES = [
+  { id: 'A', name: 'Annabel' },
+  { id: 'B', name: 'Eli' },
+  { id: 'C', name: 'Liya' },
+];
+
+// ── STATE LAYER ──
 let memories = [];
 let markers = [];
 let pickingMode = false;
 let pickedLat = null, pickedLng = null;
-let selectedColor = '#c4471a';
 let selectedFriends = [];
 let selectedType = 'text';
 let photoData = null;
@@ -601,8 +578,8 @@ let overlayVisible = false;
 let hotspots = [];
 let ghFileSha = null;
 
-// ── MAP INIT ──
-const map = L.map('map', { zoomControl: false }).setView([47.5480, -121.9836], 10);
+// ── MAP INITIALIZATION ──
+const map = L.map('map', { zoomControl: false }).setView([47.6062, -122.3321], 11);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -610,11 +587,18 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19
 }).addTo(map);
 
-// ── WATER POLYGON MASK via Overpass API ──
-// Fetches real OSM water/river/ocean polygons, converts to canvas paths,
-// uses them to clip dots so they never appear on water.
+// Build Legend
+const legendBox = document.getElementById('emotion-legend');
+Object.keys(EMOTIONS).forEach(key => {
+  const emo = EMOTIONS[key];
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  item.innerHTML = `<div class="legend-swatch" style="background:${emo.color}; opacity:0.8;"></div> ${emo.name}`;
+  legendBox.appendChild(item);
+});
 
-let waterPolygons = []; // array of arrays of {lat,lng} rings
+// ── WATER MASK DATA LAYER (OVERPASS API) ──
+let waterPolygons = []; 
 let waterCacheKey = '';
 
 async function fetchWaterPolygons() {
@@ -625,7 +609,7 @@ async function fetchWaterPolygons() {
   const n = (b.getNorth() + pad).toFixed(4);
   const e = (b.getEast()  + pad).toFixed(4);
   const key = `${s},${w},${n},${e}`;
-  if (key === waterCacheKey) return; // same view, skip refetch
+  if (key === waterCacheKey) return; 
   waterCacheKey = key;
 
   const query = `
@@ -633,13 +617,9 @@ async function fetchWaterPolygons() {
 (
   way["natural"="water"](${s},${w},${n},${e});
   way["waterway"="river"](${s},${w},${n},${e});
-  way["waterway"="canal"](${s},${w},${n},${e});
   relation["natural"="water"](${s},${w},${n},${e});
-  relation["place"="ocean"](${s},${w},${n},${e});
-  relation["water"](${s},${w},${n},${e});
 );
-out geom;
-`;
+out geom;`;
 
   try {
     const res = await fetch('https://overpass-api.de/api/interpreter', {
@@ -661,38 +641,16 @@ out geom;
       }
     }
   } catch(e) {
-    waterPolygons = []; // fail gracefully — no mask, dots everywhere
+    waterPolygons = []; 
   }
 }
 
-// Build a canvas Path2D for all water polys at current map projection
-function buildWaterPath() {
-  const path = new Path2D();
-  for (const ring of waterPolygons) {
-    if (ring.length < 3) continue;
-    const first = latLngToCanvas(ring[0].lat, ring[0].lng);
-    path.moveTo(first.x, first.y);
-    for (let i = 1; i < ring.length; i++) {
-      const p = latLngToCanvas(ring[i].lat, ring[i].lng);
-      path.lineTo(p.x, p.y);
-    }
-    path.closePath();
-  }
-  return path;
-}
-
-// Point-in-water test using a tiny offscreen canvas hit test
-let waterTestCanvas = document.createElement('canvas');
-waterTestCanvas.width = 1; waterTestCanvas.height = 1;
-let waterTestCtx = waterTestCanvas.getContext('2d', { willReadFrequently: true });
-let cachedWaterPath = null;
 let fullWaterCanvas = null;
 let fullWaterCtx = null;
 let fullWaterW = 0, fullWaterH = 0;
+let bakedPixels = null;
 
 function bakeWaterMask() {
-  // Draw all water polys onto a full-size offscreen canvas so we can
-  // do fast per-pixel isWater() checks without re-testing Path2D each time
   const wrap = document.getElementById('map-wrap');
   const W = wrap.clientWidth, H = wrap.clientHeight;
   if (!fullWaterCanvas) {
@@ -720,7 +678,6 @@ function bakeWaterMask() {
   fullWaterW = W; fullWaterH = H;
 }
 
-let bakedPixels = null;
 function snapshotWaterMask() {
   if (!fullWaterCanvas) return;
   bakedPixels = fullWaterCtx.getImageData(0, 0, fullWaterW, fullWaterH).data;
@@ -731,10 +688,10 @@ function isWater(px, py) {
   const x = Math.round(px), y = Math.round(py);
   if (x < 0 || y < 0 || x >= fullWaterW || y >= fullWaterH) return false;
   const i = (y * fullWaterW + x) * 4;
-  return bakedPixels[i] > 128; // black = water
+  return bakedPixels[i] > 128; 
 }
 
-// ── TABS ──
+// ── TABS NAVIGATION ──
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -748,7 +705,7 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// ── PICKING MODE ──
+// ── MAP CROSSHAIR PICKING MODE ──
 const pickBtn = document.getElementById('pick-map-btn');
 const pickHint = document.getElementById('pick-hint');
 
@@ -773,12 +730,12 @@ map.on('click', e => {
   pc.style.display = 'block';
 });
 
-// ── ADDRESS GEOCODE (debounced) ──
+// ── ADDRESS GEOCODING (NOMINATIM) ──
 let geoTimeout;
 document.getElementById('mem-address').addEventListener('input', e => {
   clearTimeout(geoTimeout);
   const val = e.target.value.trim();
-  if (!val || val.includes(',')) return; // skip if looks like coords
+  if (!val || val.includes(',')) return; 
   geoTimeout = setTimeout(async () => {
     try {
       const r = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val)}&format=json&limit=1`);
@@ -789,16 +746,16 @@ document.getElementById('mem-address').addEventListener('input', e => {
         const pc = document.getElementById('picked-coords');
         pc.textContent = `📍 ${pickedLat.toFixed(5)}, ${pickedLng.toFixed(5)}`;
         pc.style.display = 'block';
-        map.setView([pickedLat, pickedLng], 15);
+        map.setView([pickedLat, pickedLng], 14);
       }
     } catch(err) {}
   }, 800);
 });
 
-// ── FRIEND TAGS ──
+// ── FRIEND SELECTION TAGS ──
 document.querySelectorAll('.friend-tag').forEach(ft => {
-  if (ft.dataset.friend === '+ add') {
-    ft.addEventListener('click', () => {
+  ft.addEventListener('click', () => {
+    if (ft.dataset.friend === '+ add') {
       const name = prompt('Friend initial or name:');
       if (name && name.trim()) {
         const newFt = document.createElement('button');
@@ -815,10 +772,8 @@ document.querySelectorAll('.friend-tag').forEach(ft => {
             : selectedFriends.filter(x => x !== f);
         });
       }
-    });
-    return;
-  }
-  ft.addEventListener('click', () => {
+      return;
+    }
     ft.classList.toggle('selected');
     const f = ft.dataset.friend;
     selectedFriends = ft.classList.contains('selected')
@@ -827,7 +782,7 @@ document.querySelectorAll('.friend-tag').forEach(ft => {
   });
 });
 
-// ── MEDIA TYPE ──
+// ── DYNAMIC MEDIA RENDERING ──
 const mediaArea = document.getElementById('media-area');
 
 function renderMediaArea() {
@@ -885,14 +840,19 @@ document.querySelectorAll('.type-btn').forEach(btn => {
 });
 renderMediaArea();
 
-// ── SET DEFAULT DATE ──
 document.getElementById('mem-date').value = new Date().toISOString().split('T')[0];
 
-// ── SUBMIT ──
+// ── MEMORY RECORD SUBMISSION ──
 document.getElementById('submit-btn').addEventListener('click', async () => {
   const authorId = document.getElementById('mem-author').value;
+  const emotionKey = document.getElementById('mem-emotion').value;
+  
   if (!authorId) { alert('Select who is submitting this memory.'); return; }
+  if (!emotionKey) { alert('Please select a dominant emotional tone.'); return; }
+  
   const identity = IDENTITIES.find(i => i.id === authorId);
+  const emotionConfig = EMOTIONS[emotionKey];
+  
   const title = document.getElementById('mem-title').value.trim();
   const text = document.getElementById('mem-text').value.trim();
   if (!title) { alert('Give this memory a name.'); return; }
@@ -902,12 +862,14 @@ document.getElementById('submit-btn').addEventListener('click', async () => {
     id: Date.now(),
     author: identity.id,
     authorName: identity.name,
+    emotion: emotionKey,
+    emotionName: emotionConfig.name,
     title,
     text,
     lat: pickedLat,
     lng: pickedLng,
     date: document.getElementById('mem-date').value,
-    color: identity.color,
+    color: emotionConfig.color, // Color is tied to emotion now for hotspots
     friends: [...selectedFriends],
     type: selectedType,
     photo: photoData,
@@ -925,6 +887,7 @@ document.getElementById('submit-btn').addEventListener('click', async () => {
 
 function resetForm() {
   document.getElementById('mem-author').value = '';
+  document.getElementById('mem-emotion').value = '';
   document.getElementById('mem-title').value = '';
   document.getElementById('mem-text').value = '';
   document.getElementById('mem-address').value = '';
@@ -933,14 +896,17 @@ function resetForm() {
   photoData = null; audioData = null;
   document.querySelectorAll('.friend-tag').forEach(ft => ft.classList.remove('selected'));
   selectedFriends = [];
+  selectedType = 'text';
+  renderMediaArea();
+  document.querySelectorAll('.type-btn').forEach(b => b.dataset.type === 'text' ? b.classList.add('active') : b.classList.remove('active'));
   document.getElementById('mem-date').value = new Date().toISOString().split('T')[0];
 }
 
-// ── MARKERS ──
+// ── LEAFLET MAP MARKERS ──
 function addMarker(mem) {
   const el = document.createElement('div');
   el.className = 'mem-marker';
-  el.style.background = mem.color;
+  el.style.background = mem.color || '#7a6e62';
 
   const icon = L.divIcon({ html: el.outerHTML, className: '', iconSize: [14,14], iconAnchor: [7,7] });
   const marker = L.marker([mem.lat, mem.lng], { icon })
@@ -960,7 +926,7 @@ function highlightMemory(id) {
   }
 }
 
-// ── MEMORIES LIST ──
+// ── FRONTEND TIMELINE LIST RENDERING ──
 function renderMemoriesList() {
   const list = document.getElementById('memories-list');
   if (memories.length === 0) {
@@ -976,14 +942,20 @@ function renderMemoriesList() {
     const friendsHtml = mem.friends.length
       ? mem.friends.map(f => `<span class="mc-friend-tag">${f}</span>`).join('')
       : '';
+      
+    const emoTag = EMOTIONS[mem.emotion] || { name: 'Unknown Tone', color: '#7a6e62', icon: '✨' };
 
     card.innerHTML = `
       <div class="mc-header">
-        <div class="mc-dot" style="background:${mem.color}"></div>
+        <div class="mc-dot" style="background:${emoTag.color}"></div>
         <span class="mc-title">${mem.title}</span>
         <span class="mc-date">${mem.date || ''}</span>
       </div>
-      ${mem.photo ? `<img src="${mem.photo}" style="width:100%;height:60px;object-fit:cover;border-radius:2px;margin-bottom:6px;">` : ''}
+      <div class="mc-emotion-badge" style="background: ${emoTag.color}">
+        ${emoTag.icon} ${emoTag.name}
+      </div>
+      ${mem.photo ? `<img src="${mem.photo}" style="width:100%;height:100px;object-fit:cover;border-radius:2px;margin-bottom:6px;">` : ''}
+      ${mem.audio ? `<div style="margin-bottom:6px;"><audio controls src="${mem.audio}" style="width:100%; height:30px;"></audio></div>` : ''}
       ${mem.authorName ? `<div style="font-size:10px;color:var(--ink-muted);margin-bottom:4px;">by ${mem.authorName}</div>` : ''}
       ${mem.text ? `<div class="mc-text">${mem.text}</div>` : ''}
       <div class="mc-loc">${mem.lat.toFixed(4)}, ${mem.lng.toFixed(4)}</div>
@@ -996,30 +968,24 @@ function renderMemoriesList() {
   });
 }
 
-// ══════════════════════════════════════════════════════
-// ── GITHUB CONFIG — edit these to match your repo ──
-// ══════════════════════════════════════════════════════
+// ── REPO ARCHITECTURE SETTINGS ──
 const GH_OWNER  = 'elismth';
 const GH_REPO   = 'Info442';
 const GH_FILE   = 'memories.json';
 const GH_BRANCH = 'main';
-// ══════════════════════════════════════════════════════
-
-// ── GITHUB DATA LAYER ──
-// Reads via raw.githubusercontent.com (no auth, works on public repos).
-// Writes via GitHub Contents API — prompts for a shared token once per device.
 
 function getToken() {
   return localStorage.getItem('somewhere_gh_token') || '';
 }
 
+// ── HYBRID SYNCHRONIZATION DATA LAYER ──
 async function ghGetRaw() {
   const url = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`;
   try {
     const r = await fetch(url);
-    if (!r.ok) return { memories: [] };
+    if (!r.ok) return null;
     return await r.json();
-  } catch(e) { return { memories: [] }; }
+  } catch(e) { return null; }
 }
 
 async function ghGetWithSha() {
@@ -1034,8 +1000,7 @@ async function ghGetWithSha() {
     if (!r.ok) return null;
     const data = await r.json();
     ghFileSha = data.sha;
-    return JSON.parse(atob(data.content.replace(/
-/g, '')));
+    return JSON.parse(atob(data.content.replace(/\n/g, '')));
   } catch(e) { return null; }
 }
 
@@ -1043,23 +1008,19 @@ async function ghPut(payload) {
   let token = getToken();
   if (!token) {
     token = prompt(
-      'Enter your shared GitHub token to save memories.
-' +
-      '(needs contents: write on ' + GH_OWNER + '/' + GH_REPO + ')
-
-' +
-      'This is stored only in your browser — never in the repo.'
+      'Enter your shared GitHub token to save memories.\n' +
+      '(needs contents: write on ' + GH_OWNER + '/' + GH_REPO + ')\n\n' +
+      'This is stored safely only inside your browser.'
     );
     if (!token) { setStatus('save cancelled — no token'); return false; }
     localStorage.setItem('somewhere_gh_token', token.trim());
     token = token.trim();
   }
 
-  // Get latest sha to avoid conflicts
   await ghGetWithSha();
 
   const body = {
-    message: `memory added by ${currentUser ? currentUser.name : 'unknown'}`,
+    message: `syncing dynamic memory map updates`,
     content: btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2)))),
     branch: GH_BRANCH,
   };
@@ -1079,11 +1040,9 @@ async function ghPut(payload) {
       }
     );
     if (!r.ok) {
-      const err = await r.json();
-      console.error('GitHub write error', err);
       if (r.status === 401 || r.status === 403) {
         localStorage.removeItem('somewhere_gh_token');
-        setStatus('token invalid — will ask again on next save');
+        setStatus('token invalid — removed');
       }
       return false;
     }
@@ -1095,20 +1054,46 @@ async function ghPut(payload) {
 
 async function loadFromGitHub() {
   setStatus('loading…');
-  const data = await ghGetRaw();
+  
+  const localCache = localStorage.getItem('somewhere_local_store');
+  let data = localCache ? JSON.parse(localCache) : null;
+
+  if (!data) {
+    data = await ghGetRaw();
+  }
+
   memories = [];
   markers.forEach(m => map.removeLayer(m.marker));
   markers = [];
-  (data.memories || []).forEach(mem => { memories.push(mem); addMarker(mem); });
+
+  if (data && data.memories) {
+    data.memories.forEach(mem => { 
+      // Safe fallback data validation mapping
+      if (mem.emotion && EMOTIONS[mem.emotion]) {
+        mem.color = EMOTIONS[mem.emotion].color;
+      } else if (!mem.color) {
+        mem.color = '#7a6e62';
+      }
+      memories.push(mem); 
+      addMarker(mem); 
+    });
+  }
+
   renderMemoriesList();
-  setStatus(memories.length + ' memor' + (memories.length === 1 ? 'y' : 'ies') + ' loaded');
+  setStatus(memories.length + ' memor' + (memories.length === 1 ? 'y' : 'ies') + ' active');
   setTimeout(() => setStatus(''), 2000);
 }
 
 async function saveMemories() {
   setStatus('saving…');
-  const ok = await ghPut({ memories });
-  setStatus(ok ? 'saved ✓' : 'save failed — check token');
+  localStorage.setItem('somewhere_local_store', JSON.stringify({ memories }));
+  
+  if (getToken()) {
+    const ok = await ghPut({ memories });
+    setStatus(ok ? 'saved to cloud ✓' : 'cloud sync error');
+  } else {
+    setStatus('saved locally ✓');
+  }
   setTimeout(() => setStatus(''), 3000);
 }
 
@@ -1117,7 +1102,7 @@ function setStatus(msg) {
   if (el) el.textContent = msg;
 }
 
-// ── OVERLAY CANVAS ──
+// ── BLOOM CANVAS OVERLAY GRAPHICS GENERATOR ──
 const canvas = document.getElementById('overlay-canvas');
 const ctx = canvas.getContext('2d');
 const tooltip = document.getElementById('hotspot-tooltip');
@@ -1160,14 +1145,12 @@ async function renderOverlay() {
   const dotSize = parseInt(document.getElementById('ctrl-dots').value);
   const halftone = document.getElementById('ctrl-halftone').checked;
 
-  // Fetch water polygons from Overpass, bake to pixel mask
   await fetchWaterPolygons();
   bakeWaterMask();
   snapshotWaterMask();
 
   hotspots = [];
 
-  // Group nearby memories into hotspots
   const used = new Array(memories.length).fill(false);
   for (let i = 0; i < memories.length; i++) {
     if (used[i]) continue;
@@ -1185,10 +1168,9 @@ async function renderOverlay() {
     hotspots.push({ lat: avgLat, lng: avgLng, memories: group, radius: spread });
   }
 
-  // Draw blobs — skip any dot that lands on water
   memories.forEach(mem => {
     const pos = latLngToCanvas(mem.lat, mem.lng);
-    const rgb = hexToRgb(mem.color);
+    const rgb = hexToRgb(mem.color || '#7a6e62');
     const r = spread;
 
     if (halftone) {
@@ -1198,7 +1180,7 @@ async function renderOverlay() {
           const dist = Math.sqrt(dx*dx + dy*dy);
           if (dist > r) continue;
           const cx = pos.x + dx, cy = pos.y + dy;
-          if (isWater(cx, cy)) continue; // ← hard geographic cutoff
+          if (isWater(cx, cy)) continue; 
           const falloff = 1 - dist / r;
           const radius = dotSize * falloff * 1.4;
           const alpha = opacity * falloff * 0.9;
@@ -1209,7 +1191,6 @@ async function renderOverlay() {
         }
       }
     } else {
-      // Smooth blob clipped to land: draw gradient then erase water areas
       ctx.save();
       const grad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, r);
       grad.addColorStop(0, `rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
@@ -1220,7 +1201,6 @@ async function renderOverlay() {
       ctx.fillStyle = grad;
       ctx.fill();
 
-      // Punch out water using destination-out compositing
       if (waterPolygons.length > 0) {
         ctx.globalCompositeOperation = 'destination-out';
         ctx.fillStyle = 'rgba(0,0,0,1)';
@@ -1242,7 +1222,6 @@ async function renderOverlay() {
     }
   });
 
-  // Hotspot rings
   hotspots.filter(h => h.memories.length > 1).forEach(hs => {
     const pos = latLngToCanvas(hs.lat, hs.lng);
     ctx.beginPath();
@@ -1255,17 +1234,7 @@ async function renderOverlay() {
   setTimeout(() => { canvas.style.opacity = 1; }, 50);
 }
 
-// ── SAVE TO GITHUB ──
-async function saveMemories() {
-  setStatus('saving…');
-  // Always fetch latest sha before writing to avoid conflicts
-  await ghGet();
-  const ok = await ghPut({ memories });
-  setStatus(ok ? 'saved ✓' : 'save failed — check token/repo');
-  setTimeout(() => setStatus(''), 3000);
-}
-
-// ── OVERLAY CONTROLS — AUTO REDRAW ──
+// ── LIVE RENDERING CONTROLLER HANDLERS ──
 ['spread','opacity','dots'].forEach(id => {
   const inp = document.getElementById('ctrl-' + id);
   const val = document.getElementById('val-' + id);
@@ -1284,7 +1253,7 @@ document.getElementById('ctrl-hidemap').addEventListener('change', e => {
   wrap.classList.toggle('map-hidden', e.target.checked);
 });
 
-// ── HOTSPOT HOVER ──
+// ── BLOB HOTSPOT HOVER EVENT ENGINE ──
 canvas.addEventListener('mousemove', e => {
   if (!overlayVisible || hotspots.length === 0) return;
   const rect = canvas.getBoundingClientRect();
@@ -1303,31 +1272,33 @@ canvas.addEventListener('mousemove', e => {
 
   if (found) {
     canvas.style.cursor = 'pointer';
-    const entriesHtml = found.memories.map(m => `
-      <div class="ht-entry">
-        <div style="display:flex;align-items:center;gap:6px;">
-          <div style="width:8px;height:8px;border-radius:50%;background:${m.color};flex-shrink:0;"></div>
-          <div class="ht-entry-name">${m.title}</div>
+    const entriesHtml = found.memories.map(m => {
+      const emo = EMOTIONS[m.emotion] || { name: 'Unknown', icon: '✨' };
+      return `
+        <div class="ht-entry">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:${m.color || '#7a6e62'};flex-shrink:0;"></div>
+            <div class="ht-entry-name">${m.title}</div>
+          </div>
+          <div style="font-size:9px; color:var(--ink-muted); margin: 2px 0;">Tone: ${emo.icon} ${emo.name}</div>
+          ${m.text ? `<div class="ht-entry-text">${m.text.length > 80 ? m.text.slice(0,80)+'…' : m.text}</div>` : ''}
+          <div class="ht-entry-meta">by ${m.authorName || 'Anonymous'} ${m.friends.length ? 'w/ ' + m.friends.join(', ') : ''}</div>
         </div>
-        ${m.text ? `<div class="ht-entry-text">${m.text.length > 80 ? m.text.slice(0,80)+'…' : m.text}</div>` : ''}
-        ${m.friends.length ? `<div class="ht-entry-friend">with: ${m.friends.join(', ')}</div>` : ''}
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     tooltip.innerHTML = `
-      <div class="ht-title">${found.memories.length} memor${found.memories.length === 1 ? 'y' : 'ies'} here</div>
+      <div class="ht-title">${found.memories.length} Emotional Layers Here</div>
       ${entriesHtml}
     `;
     tooltip.classList.add('visible');
 
-    // Position tooltip
     let tx = e.clientX - rect.left + 16;
     let ty = e.clientY - rect.top - 10;
-    if (tx + 270 > canvas.width) tx = mx - 276;
+    if (tx + 290 > canvas.width) tx = mx - 296;
     if (ty + tooltip.offsetHeight > canvas.height) ty = my - tooltip.offsetHeight - 10;
     tooltip.style.left = tx + 'px';
     tooltip.style.top = ty + 'px';
-    tooltip.style.pointerEvents = 'none';
   } else {
     canvas.style.cursor = '';
     tooltip.classList.remove('visible');
@@ -1338,11 +1309,10 @@ canvas.addEventListener('mouseleave', () => {
   tooltip.classList.remove('visible');
 });
 
-// Invalidate water cache on zoom (new bounds = new query needed), redraw on pan
 map.on('zoomend', () => { waterCacheKey = ''; if (overlayVisible) renderOverlay(); });
 map.on('moveend', () => { if (overlayVisible) renderOverlay(); });
 
-// ── HIDE OVERLAY WHEN NOT ON OVERLAY TAB ──
+// ── TAB CANVAS HIDING REGIME ──
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     if (tab.dataset.tab !== 'overlay' && overlayVisible) {
@@ -1356,18 +1326,11 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// ── USER PICKER ──
-(identity) {
-  currentUser = { ...identity };
-  document.getElementById('login-overlay').style.display = 'none';
-  document.getElementById('refresh-btn').addEventListener('click', () => {
+// ── INITIALIZATION ──
+document.getElementById('refresh-btn').addEventListener('click', () => {
   loadFromGitHub().catch(e => setStatus(''));
 });
 
-
-
-
-// Load memories on page open
 loadFromGitHub().catch(e => setStatus(''));
 </script>
 
