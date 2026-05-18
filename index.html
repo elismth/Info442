@@ -399,43 +399,6 @@
     margin-top: 6px;
   }
 
-  /* ── USER PICKER ── */
-  #login-overlay {
-    position: fixed; inset: 0;
-    background: rgba(245,240,232,0.97);
-    z-index: 9999;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Space Mono', monospace;
-  }
-  #login-box {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 2rem;
-    width: 320px;
-  }
-  .login-title {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 20px;
-    margin-bottom: 4px;
-  }
-  .login-title em { font-style: italic; color: var(--rust); }
-  .login-sub { font-size: 10px; color: var(--ink-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
-  .identity-btn {
-    display: flex; align-items: center; gap: 12px;
-    width: 100%; padding: 14px 16px;
-    background: white; border: 1px solid var(--border);
-    border-radius: 4px; cursor: pointer;
-    font-family: 'Space Mono', monospace;
-    font-size: 13px; color: var(--ink);
-    margin-bottom: 8px; transition: all 0.15s;
-    box-sizing: border-box;
-  }
-  .identity-btn:hover { border-color: var(--rust); background: var(--panel); }
-  .identity-name { flex: 1; }
-  .identity-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-
-
   /* ── IDENTITY BAR ── */
   #identity-bar {
     display: flex; align-items: center; gap: 8px;
@@ -466,16 +429,7 @@
 </head>
 <body>
 
-<!-- USER PICKER -->
-<div id="login-overlay">
-  <div id="login-box">
-    <div class="login-title">some<em>where</em></div>
-    <div class="login-sub">who's adding memories?</div>
-    <div id="identity-list">
-      <!-- populated by buildUserPicker() -->
-    </div>
-  </div>
-</div>
+
 
 <div id="app">
 
@@ -487,11 +441,8 @@
     </div>
 
     <div id="identity-bar">
-      <div class="id-dot" id="id-dot"></div>
-      <span class="id-name" id="id-name">not signed in</span>
       <span id="sync-status"></span>
-      <button id="refresh-btn">↺</button>
-      <button id="switch-user-btn">switch</button>
+      <button id="refresh-btn">↺ sync</button>
     </div>
     <div id="tabs">
       <button class="tab active" data-tab="add">+ Add Memory</button>
@@ -502,6 +453,16 @@
     <!-- ADD MEMORY PANEL -->
     <div class="panel active" id="panel-add">
       <div class="scroll-area">
+        <div class="field">
+          <label>Submitted by</label>
+          <select id="mem-author">
+            <option value="">— select —</option>
+            <option value="A">Annabel</option>
+            <option value="B">Eli</option>
+            <option value="C">Liya</option>
+          </select>
+        </div>
+
         <div class="field">
           <label>Title / moment</label>
           <input type="text" id="mem-title" placeholder="what happened here?">
@@ -620,14 +581,10 @@
 
 // ── 3 IDENTITIES — edit names/colors here, or rename in-app ──
 const IDENTITIES = [
-  { id: 'A', color: '#c4471a', nameKey: 'somewhere_name_A', defaultName: 'Annabel' },
-  { id: 'B', color: '#2e6e9e', nameKey: 'somewhere_name_B', defaultName: 'Eli'     },
-  { id: 'C', color: '#4a7c59', nameKey: 'somewhere_name_C', defaultName: 'Liya'    },
+  { id: 'A', name: 'Annabel', color: '#c4471a' },
+  { id: 'B', name: 'Eli',     color: '#2e6e9e' },
+  { id: 'C', name: 'Liya',    color: '#4a7c59' },
 ];
-
-function userName(identity) {
-  return localStorage.getItem(identity.nameKey) || identity.defaultName;
-}
 // ══════════════════════════════════════════════════════
 
 // ── STATE ──
@@ -642,7 +599,6 @@ let photoData = null;
 let audioData = null;
 let overlayVisible = false;
 let hotspots = [];
-let currentUser = null;
 let ghFileSha = null;
 
 // ── MAP INIT ──
@@ -934,23 +890,24 @@ document.getElementById('mem-date').value = new Date().toISOString().split('T')[
 
 // ── SUBMIT ──
 document.getElementById('submit-btn').addEventListener('click', async () => {
-  if (!currentUser) return;
+  const authorId = document.getElementById('mem-author').value;
+  if (!authorId) { alert('Select who is submitting this memory.'); return; }
+  const identity = IDENTITIES.find(i => i.id === authorId);
   const title = document.getElementById('mem-title').value.trim();
   const text = document.getElementById('mem-text').value.trim();
   if (!title) { alert('Give this memory a name.'); return; }
   if (!pickedLat || !pickedLng) { alert('Pick a location on the map first.'); return; }
 
-  currentUser.name = userName(currentUser);
   const mem = {
     id: Date.now(),
-    author: currentUser.id,
-    authorName: currentUser.name,
+    author: identity.id,
+    authorName: identity.name,
     title,
     text,
     lat: pickedLat,
     lng: pickedLng,
     date: document.getElementById('mem-date').value,
-    color: currentUser.color,
+    color: identity.color,
     friends: [...selectedFriends],
     type: selectedType,
     photo: photoData,
@@ -967,6 +924,7 @@ document.getElementById('submit-btn').addEventListener('click', async () => {
 });
 
 function resetForm() {
+  document.getElementById('mem-author').value = '';
   document.getElementById('mem-title').value = '';
   document.getElementById('mem-text').value = '';
   document.getElementById('mem-address').value = '';
@@ -1136,20 +1094,15 @@ async function ghPut(payload) {
 }
 
 async function loadFromGitHub() {
-  try {
-    setStatus('loading…');
-    const data = await ghGetRaw();
-    memories = [];
-    markers.forEach(m => map.removeLayer(m.marker));
-    markers = [];
-    (data.memories || []).forEach(mem => { memories.push(mem); addMarker(mem); });
-    renderMemoriesList();
-    setStatus(memories.length + ' memor' + (memories.length === 1 ? 'y' : 'ies') + ' loaded');
-    setTimeout(() => setStatus(''), 2000);
-  } catch(e) {
-    console.warn('loadFromGitHub failed:', e);
-    setStatus('');
-  }
+  setStatus('loading…');
+  const data = await ghGetRaw();
+  memories = [];
+  markers.forEach(m => map.removeLayer(m.marker));
+  markers = [];
+  (data.memories || []).forEach(mem => { memories.push(mem); addMarker(mem); });
+  renderMemoriesList();
+  setStatus(memories.length + ' memor' + (memories.length === 1 ? 'y' : 'ies') + ' loaded');
+  setTimeout(() => setStatus(''), 2000);
 }
 
 async function saveMemories() {
@@ -1404,70 +1357,18 @@ document.querySelectorAll('.tab').forEach(tab => {
 });
 
 // ── USER PICKER ──
-function buildUserPicker() {
-  const list = document.getElementById('identity-list');
-  list.innerHTML = '';
-  IDENTITIES.forEach(identity => {
-    const btn = document.createElement('button');
-    btn.className = 'identity-btn';
-
-    const dot = document.createElement('div');
-    dot.className = 'identity-dot';
-    dot.style.background = identity.color;
-
-    const nameInput = document.createElement('input');
-    nameInput.className = 'identity-name-input';
-    nameInput.value = userName(identity);
-    nameInput.placeholder = identity.defaultName;
-    // Save name on change
-    nameInput.addEventListener('input', e => {
-      localStorage.setItem(identity.nameKey, e.target.value.trim() || identity.defaultName);
-    });
-    // Prevent btn click when editing name
-    nameInput.addEventListener('click', e => e.stopPropagation());
-    nameInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); selectUser(identity); }
-    });
-
-    const hint = document.createElement('span');
-    hint.className = 'identity-edit-hint';
-    hint.textContent = 'edit name ↑ · click to select';
-
-    btn.appendChild(dot);
-    btn.appendChild(nameInput);
-    btn.appendChild(hint);
-    btn.addEventListener('click', () => selectUser(identity));
-    list.appendChild(btn);
-  });
-}
-
-function selectUser(identity) {
-  currentUser = { ...identity, name: userName(identity) };
+(identity) {
+  currentUser = { ...identity };
   document.getElementById('login-overlay').style.display = 'none';
-  updateIdentityBar();
-  loadFromGitHub().catch(e => { console.warn('load error', e); setStatus(''); });
-}
-
-function updateIdentityBar() {
-  if (!currentUser) return;
-  document.getElementById('id-dot').style.background = currentUser.color;
-  document.getElementById('id-name').textContent = currentUser.name;
-}
-
-document.getElementById('switch-user-btn').addEventListener('click', () => {
-  currentUser = null;
-  buildUserPicker();
-  document.getElementById('login-overlay').style.display = 'flex';
+  document.getElementById('refresh-btn').addEventListener('click', () => {
+  loadFromGitHub().catch(e => setStatus(''));
 });
 
-document.getElementById('refresh-btn').addEventListener('click', async () => {
-  await loadFromGitHub();
-});
-
-// ── BOOT ──
-buildUserPicker();
 
 
+
+// Load memories on page open
+loadFromGitHub().catch(e => setStatus(''));
 </script>
 
 </body>
