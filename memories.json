@@ -111,6 +111,38 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779138854202,
+      "author": "B",
+      "authorName": "Eli",
+      "title": "Coffee mornings",
+      "text": "my favorite coffee shop, I brought Felix here so many mornings before work <3",
+      "lat": 47.66980913426943,
+      "lng": -122.31322377920152,
+      "date": "",
+      "color": "#c44177",
+      "emotion": "tender",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
+    },
+    {
+      "id": 1779138918999,
+      "author": "B",
+      "authorName": "Eli",
+      "title": "Cry baby",
+      "text": "definitely cried here after a party because I saw an ex. I'm not a drunk crier but that night I was.",
+      "lat": 47.66826299960743,
+      "lng": -122.31317013502122,
+      "date": "",
+      "color": "#c4471a",
+      "emotion": "intense",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
