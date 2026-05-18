@@ -31,6 +31,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779138285992,
+      "author": "B",
+      "authorName": "Eli",
+      "title": "College job",
+      "text": "Job that got me through college, thanks din tai",
+      "lat": 47.661557736148296,
+      "lng": -122.29955792427064,
+      "date": "",
+      "color": "#4a7c59",
+      "emotion": "alive",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
