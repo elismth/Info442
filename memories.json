@@ -143,6 +143,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779208534444,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "self-care friday mornings",
+      "text": "This coffee shop fueled my creativity and reminded me who I was during tough times.",
+      "lat": 47.661514380349324,
+      "lng": -122.32536077499391,
+      "date": "2026-05-19",
+      "color": "#c44177",
+      "emotion": "tender",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
