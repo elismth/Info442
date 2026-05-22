@@ -159,6 +159,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779419339655,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "sunny reflection",
+      "text": "Sun bathing here during the healing process of a difficult breakup was pivotal to my process of moving on. This was one way I explored time outdoors as my favorite form of self-care.",
+      "lat": 47.682104331545254,
+      "lng": -122.33078956604005,
+      "date": "",
+      "color": "#c9861a",
+      "emotion": "warm",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
