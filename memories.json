@@ -239,6 +239,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779419998570,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "kayak date",
+      "text": "I had one of my favorite dates here. My partner took my through the lily pads in a kayak and showed me a place that was special to him. We sat and talked for ever on the water.",
+      "lat": 47.64177291339645,
+      "lng": -122.29459583759309,
+      "date": "",
+      "color": "#2e6e9e",
+      "emotion": "calm",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
