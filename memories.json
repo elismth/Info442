@@ -335,6 +335,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779420609643,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "illegal parking",
+      "text": "I've never paid to park in this lot. I've come the believe that the traffic cop just passes my car intentionally.",
+      "lat": 47.65661494314806,
+      "lng": -122.30060935020448,
+      "date": "",
+      "color": "#2e6e9e",
+      "emotion": "calm",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
