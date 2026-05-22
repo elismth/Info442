@@ -271,6 +271,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779420240103,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "community",
+      "text": "The people I've lived with in this house have been some of the strongest community I've ever experienced.",
+      "lat": 47.66483099498936,
+      "lng": -122.32473850250246,
+      "date": "",
+      "color": "#c9861a",
+      "emotion": "warm",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
