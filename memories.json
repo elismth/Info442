@@ -287,6 +287,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779420374513,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "god bless trader joes",
+      "text": "oh how I love trader joe's. their frozen food and unique desserts have carried me through college. also the go-to spot for picnic treats.",
+      "lat": 47.66263620006018,
+      "lng": -122.31764405965806,
+      "date": "",
+      "color": "#c9861a",
+      "emotion": "warm",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
