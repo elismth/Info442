@@ -175,6 +175,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779419491438,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "marching band memories",
+      "text": "As a member of the marching band, UW football games are a significant piece of my college experience. This stadium has begun to feel like home. I'm not ready to leave it all behind.",
+      "lat": 47.650548942231275,
+      "lng": -122.30244646751005,
+      "date": "",
+      "color": "#4a7c59",
+      "emotion": "alive",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
