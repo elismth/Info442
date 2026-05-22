@@ -255,6 +255,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779420096970,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "long hours in the basement",
+      "text": "My office is in the basement of this building and I've spent way too many hours working down there loosing track of time.",
+      "lat": 47.65304485718255,
+      "lng": -122.30227231979372,
+      "date": "",
+      "color": "#c4471a",
+      "emotion": "intense",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
