@@ -223,6 +223,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779419811237,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "picnic with the gals",
+      "text": "I've had many a picnic at gas works during the spring with the girlies. Looking out at the Seattle skyline past the water reminds me why I moved here.",
+      "lat": 47.64474743940193,
+      "lng": -122.33562827110292,
+      "date": "",
+      "color": "#4a7c59",
+      "emotion": "alive",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
