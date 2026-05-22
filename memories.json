@@ -319,6 +319,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779420523861,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "dorm blues",
+      "text": "maple hall was my dorm freshman year. all of my friends lived on north campus and I felt pretty lonely here.",
+      "lat": 47.6558615596987,
+      "lng": -122.31625735759737,
+      "date": "",
+      "color": "#c44177",
+      "emotion": "tender",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
