@@ -303,6 +303,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779420461861,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "hinge date",
+      "text": "During my single era I went on a hinge date with a guy here who was apparently a dj. I never saw him again...",
+      "lat": 47.65740986833501,
+      "lng": -122.3130574822426,
+      "date": "",
+      "color": "#4a7c59",
+      "emotion": "alive",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
