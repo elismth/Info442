@@ -191,6 +191,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779419612588,
+      "author": "A",
+      "authorName": "Annabel",
+      "title": "first college class",
+      "text": "My first ever college class was in this building. I remember the day as super rainy, and I wasn't used to climbing up hills yet. I was covered in rain by the time I got there, and the professor showed up late.",
+      "lat": 47.659102657325796,
+      "lng": -122.30867207050325,
+      "date": "",
+      "color": "#c4471a",
+      "emotion": "intense",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
