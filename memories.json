@@ -367,6 +367,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779823551886,
+      "author": "C",
+      "authorName": "Liya",
+      "title": "my college job",
+      "text": "worked as a research assistant in ece for almost 3 years!",
+      "lat": 47.6535775,
+      "lng": -122.3063037,
+      "date": "2022-12-01",
+      "color": "#c9861a",
+      "emotion": "warm",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
