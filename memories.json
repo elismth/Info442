@@ -447,6 +447,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779824684550,
+      "author": "C",
+      "authorName": "Liya",
+      "title": "meeting my best friend / roommate",
+      "text": "before freshman year even started, this was our first time meeting in person. she greeted me with a hug.",
+      "lat": 47.65735205600222,
+      "lng": -122.31332033872607,
+      "date": "2022-08-15",
+      "color": "#c44177",
+      "emotion": "tender",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
