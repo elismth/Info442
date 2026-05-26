@@ -351,6 +351,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779823416620,
+      "author": "C",
+      "authorName": "Liya",
+      "title": "committed to uw",
+      "text": "accepted my offer here with a prickly pear margarita",
+      "lat": 47.65158,
+      "lng": -122.3143295,
+      "date": "2022-03-31",
+      "color": "#4a7c59",
+      "emotion": "alive",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
