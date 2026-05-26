@@ -431,6 +431,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779824461811,
+      "author": "C",
+      "authorName": "Liya",
+      "title": "walking study",
+      "text": "did a sociology study where i had to walk around union bay with no phone, no earbuds, etc, for 6 weeks in a row. found it incredibly healing.",
+      "lat": 47.6573765,
+      "lng": -122.2940013,
+      "date": "2025-07-16",
+      "color": "#7b5ea7",
+      "emotion": "wistful",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
