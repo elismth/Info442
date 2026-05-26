@@ -399,6 +399,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779823813669,
+      "author": "C",
+      "authorName": "Liya",
+      "title": "the worst day of college",
+      "text": "left a terrible meeting here and immediately got terrible news. wouldn't wish that day on anyone,",
+      "lat": 47.6584393,
+      "lng": -122.3133866,
+      "date": "2025-03-16",
+      "color": "#c4471a",
+      "emotion": "intense",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
