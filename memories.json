@@ -383,6 +383,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779823695718,
+      "author": "C",
+      "authorName": "Liya",
+      "title": "\"girlhouse\"",
+      "text": "though i never lived here, this house feels like home. so much happened here, good and bad, that defined my college experience",
+      "lat": 47.6639222,
+      "lng": -122.3075318,
+      "date": "2026-05-26",
+      "color": "#c44177",
+      "emotion": "tender",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
