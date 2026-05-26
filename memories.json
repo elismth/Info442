@@ -479,6 +479,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779825254633,
+      "author": "C",
+      "authorName": "Liya",
+      "title": "naptime",
+      "text": "took a nap after a difficult exam on this bench in the springtime. may have looked crazy but i don't regret it.",
+      "lat": 47.65376575959268,
+      "lng": -122.30732560157777,
+      "date": "2024-05-25",
+      "color": "#2e6e9e",
+      "emotion": "calm",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
