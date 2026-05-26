@@ -463,6 +463,22 @@
       "type": "text",
       "photo": null,
       "audio": null
+    },
+    {
+      "id": 1779825020616,
+      "author": "C",
+      "authorName": "Liya",
+      "title": "crying on a frat lawn",
+      "text": "sobbed on the phone with an ex during a frat party. not my proudest moment,  passersby were very concerned.",
+      "lat": 47.6615575,
+      "lng": -122.3092175,
+      "date": "2023-10-04",
+      "color": "#c4471a",
+      "emotion": "intense",
+      "friends": [],
+      "type": "text",
+      "photo": null,
+      "audio": null
     }
   ]
 }
